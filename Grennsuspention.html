@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenSuspension | Energie aus jeder Bewegung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 1)), url('https://images.unsplash.com/photo-1588578278239-014435833214?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            animation: slow-zoom-pan 25s linear infinite alternate;
+        }
+        .accent-gradient-text {
+            background: linear-gradient(90deg, #10B981, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Button Styles --- */
+        .btn {
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            border: 2px solid transparent; 
+        }
+
+        .btn-primary {
+            background-color: #10b981;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #737373;
+            color: #e5e5e5;
+             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+        }
+        .btn-secondary:hover {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            background-color: white;
+            color: black;
+            border-color: white;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 120%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: skewX(-25deg);
+        }
+
+        .btn:hover::after {
+            left: 150%;
+        }
+        /* --- End of Button Styles --- */
+        
+        .card-interactive {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+        .card-interactive:hover {
+            transform: perspective(1000px) rotateY(var(--rotate-y, 0)) rotateX(var(--rotate-x, 0)) scale3d(1.05, 1.05, 1.05);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+        }
+        
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animations */
+        @keyframes slow-zoom-pan {
+            0% { background-size: 100%; background-position: 50% 50%; }
+            100% { background-size: 110%; background-position: 60% 40%; }
+        }
+        @keyframes slide-up-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-headline {
+            transition: transform 0.4s ease-in-out;
+        }
+        .hero-headline:hover {
+            transform: translateY(-8px);
+        }
+        .pulsing-icon {
+            animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Custom Number Input Styles */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        input[type='number'] {
+            -moz-appearance: textfield;
+            appearance: none;
+        }
+
+        /* Cookie Banner Style */
+        #cookie-banner {
+            animation: slide-up-fade-in 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black/30 backdrop-blur-lg">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-4">
+                <a href="#">
+                    <img src="Img/klein logo.png" alt="GreenSuspension Logo" class="h-12 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x50/0a0a0a/10b981?text=GreenSuspension&font=inter';">
+                </a>
+                <div class="hidden lg:flex items-center space-x-6 text-neutral-300">
+                    <a href="#technologie" class="hover:text-emerald-400 transition-colors duration-200">Technologie</a>
+                    <a href="#vorteil" class="hover:text-emerald-400 transition-colors duration-200">Unser Vorteil</a>
+                    <a href="#kaufen" class="hover:text-emerald-400 transition-colors duration-200">Produkte</a>
+                    <a href="#wirtschaftlichkeit" class="hover:text-emerald-400 transition-colors duration-200">Rechner</a>
+                    <a href="#zukunft" class="hover:text-emerald-400 transition-colors duration-200">Zukunft</a>
+                </div>
+                <div class="hidden md:block">
+                    <a href="#kontakt" class="btn btn-primary">Angebot anfordern</a>
+                </div>
+                <button id="mobile-menu-button" class="lg:hidden p-2">
+                    <i data-lucide="menu" class="text-white"></i>
+                </button>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden px-4 pb-4">
+            <a href="#technologie" class="block py-2 text-center hover:bg-neutral-800 rounded">Technologie</a>
+            <a href="#vorteil" class="block py-2 text-center hover:bg-neutral-800 rounded">Unser Vorteil</a>
+            <a href="#kaufen" class="block py-2 text-center hover:bg-neutral-800 rounded">Produkte</a>
+            <a href="#wirtschaftlichkeit" class="block py-2 text-center hover:bg-neutral-800 rounded">Rechner</a>
+            <a href="#zukunft" class="block py-2 text-center hover:bg-neutral-800 rounded">Zukunft</a>
+            <a href="#kontakt" class="block mt-4 text-center btn btn-primary w-full">Angebot anfordern</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-bg min-h-screen flex items-center pt-20">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tighter hero-headline">
+                    Verwandeln Sie Stöße in <span class="accent-gradient-text">Strom.</span><br> Und Kosten in <span class="accent-gradient-text">Gewinn.</span>
+                </h1>
+                <p class="max-w-3xl mx-auto mt-6 text-lg md:text-xl text-neutral-300">
+                    Unsere innovative Rekuperationstechnologie gewinnt Energie aus jeder Fahrt zurück, senkt Ihre Kosten und schont die Umwelt.
+                </p>
+                <div class="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#technologie" class="btn btn-secondary">Technologie entdecken</a>
+                    <a href="#kaufen" class="btn btn-primary">Jetzt Ihr Set finden</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 md:py-32 fade-in-section">
+            <div class="container mx-auto px-4">
+                <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Ihre Vorteile mit <span class="font-black">Green</span><span class="text-emerald-500 font-black">Suspension</span></h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Wir machen Fahrzeuge effizienter, kostengünstiger und umweltfreundlicher. Egal ob LKW oder PKW.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="card-interactive flex flex-col items-center bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 md:p-8 transition-all duration-300 h-full">
+                        <div class="flex justify-center mb-5">
+                             <div class="bg-neutral-900/50 p-4 rounded-full pulsing-icon">
+                                <i data-lucide="trending-down" class="text-emerald-400 w-10 h-10"></i>
+                             </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Kosteneinsparungen</h3>
+                        <p class="text-neutral-400">Reduzieren Sie den Energiebedarf, senken Sie Betriebskosten und profitieren Sie von einer schnellen Amortisation.</p>
+                    </div>
+                    <div class="card-interactive flex flex-col items-center bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 md:p-8 transition-all duration-300 h-full">
+                        <div class="flex justify-center mb-5">
+                             <div class="bg-neutral-900/50 p-4 rounded-full pulsing-icon" style="animation-delay: 0.2s;">
+                                <i data-lucide="leaf" class="text-emerald-400 w-10 h-10"></i>
+                             </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Nachhaltige Lösung</h3>
+                        <p class="text-neutral-400">Verbessern Sie aktiv die CO₂-Bilanz Ihres Fahrzeugs oder Ihrer Flotte durch eine effizientere Energienutzung.</p>
+                    </div>
+                    <div class="card-interactive flex flex-col items-center bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 md:p-8 transition-all duration-300 h-full">
+                        <div class="flex justify-center mb-5">
+                             <div class="bg-neutral-900/50 p-4 rounded-full pulsing-icon" style="animation-delay: 0.4s;">
+                                <i data-lucide="battery-charging" class="text-emerald-400 w-10 h-10"></i>
+                             </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Reichweitenverlängerung</h3>
+                        <p class="text-neutral-400">Gewinnen Sie zusätzliche Energie für E-Fahrzeuge und steigern Sie die Reichweite, besonders im Stadtverkehr.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="technologie" class="py-20 md:py-32 bg-neutral-900/50 fade-in-section">
+            <div class="container mx-auto px-4">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Die <span class="text-emerald-500 font-black">Technologie</span> dahinter</h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Ein intelligentes System, das kinetische Energie nicht länger verschwendet, sondern nutzbar macht.</p>
+                </div>
+                <div class="max-w-6xl mx-auto grid lg:grid-cols-2 items-center gap-12">
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-bold">Vom Stoß zur elektrischen Energie</h3>
+                        <p class="text-neutral-300">
+                           Im Kern unseres Systems arbeitet ein innovativer Dämpfer, der die kinetische Energie aus Fahrbahnunebenheiten auffängt. Fährt das Fahrzeug über eine Unebenheit, wird durch die Bewegung des Kolbens Hydrauliköl durch eine speziell entwickelte Turbine gepresst. Diese Bewegung treibt einen kompakten Generator an, der die Energie umwandelt.
+                        </p>
+                        <p class="text-neutral-300">
+                            Ein Druck- und Höhensensor überwacht den Prozess, während ansteuerbare Ventile und physikalische Prinzipien dafür sorgen, dass der Dämpfer nach jedem Stoß in seine Ausgangslage zurückkehrt. Die gewonnene Energie wird direkt in das Bordnetz oder die Batterie eingespeist.
+                        </p>
+                    </div>
+                    <div class="card-interactive p-8 bg-neutral-900 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl md:p-8 transition-all duration-300 h-full">
+                        <h4 class="text-xl font-bold mb-4">Leistung in der Praxis</h4>
+                        <p class="text-neutral-400 mb-4">Unsere Berechnungen und Simulationen, verifiziert durch Fachexperten, zeigen ein enormes Potenzial. Bei einer typischen Stoßbelastung kann ein einzelner Dämpfer eine Leistung von bis zu</p>
+                        <div class="text-center my-6">
+                            <span class="text-7xl font-bold accent-gradient-text">80&nbsp;W</span>
+                            <p class="text-neutral-400 mt-2">pro Stoßdämpfer erzeugen.</p>
+                        </div>
+                        <p class="text-neutral-400">Für einen handelsüblichen PKW bedeutet das eine potenzielle Rückgewinnung von bis zu 400&nbsp;Watt auf unebener Fahrbahn – Energie, die sonst als Wärme verloren ginge.</p>
+                        <a href="#kontakt" class="group text-emerald-400 font-semibold mt-6 inline-block">
+                            Technisches Datenblatt anfordern
+                            <span class="inline-block transition-transform duration-300 group-hover:translate-x-2">&rarr;</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="kaufen" class="py-20 md:py-32 fade-in-section">
+            <div class="container mx-auto px-4">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Für jeden das <span class="accent-gradient-text font-black">richtige Setup</span></h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Egal ob Sie eine ganze Flotte optimieren oder Ihren privaten PKW aufrüsten möchten – wir haben die passende Lösung.</p>
+                </div>
+                <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
+                    <div class="card-interactive flex flex-col text-center bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 md:p-8 transition-all duration-300 h-full">
+                        <i data-lucide="car" class="w-12 h-12 text-emerald-400 mx-auto mb-4 pulsing-icon"></i>
+                        <h3 class="text-2xl font-bold mb-2">Für Ihren PKW</h3>
+                        <p class="text-neutral-400 mb-6 flex-grow">Rüsten Sie Ihr Elektro- oder Hybrid-Fahrzeug nach und profitieren Sie von mehr Reichweite und geringeren Ladekosten im Alltag.</p>
+                        <div class="bg-neutral-800/80 rounded-lg p-6 my-4">
+                            <p class="text-sm text-neutral-400">Komplett-Set (4 Dämpfer)</p>
+                            <p class="text-4xl font-bold text-white my-2">1.600&nbsp;€</p>
+                            <p class="text-xs text-neutral-500">Verkaufspreis zzgl. Einbau und MwSt.</p>
+                        </div>
+                        <a href="#kontakt" class="btn btn-primary mt-auto">Set jetzt anfragen</a>
+                    </div>
+                    <div class="card-interactive flex flex-col text-center bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-6 md:p-8 transition-all duration-300 h-full">
+                        <i data-lucide="truck" class="w-12 h-12 text-emerald-400 mx-auto mb-4 pulsing-icon" style="animation-delay: 0.2s;"></i>
+                        <h3 class="text-2xl font-bold mb-2">Für Ihre Flotte</h3>
+                        <p class="text-neutral-400 mb-6 flex-grow">Senken Sie nachhaltig die Betriebskosten Ihrer LKW-, Bus- oder Transporterflotte. Ideal für Logistik, Nahverkehr und Lieferdienste.</p>
+                        <div class="bg-neutral-800/80 rounded-lg p-6 my-4 flex-grow flex flex-col justify-center">
+                           <p class="text-lg text-neutral-300">Individuelle Flottenlösungen auf Anfrage. Profitieren Sie von Mengenrabatten und maßgeschneiderten Servicepaketen.</p>
+                        </div>
+                        <a href="#wirtschaftlichkeit" class="btn btn-secondary mt-auto">Flotten-Potenzial berechnen</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="app" class="py-20 md:py-32 fade-in-section overflow-hidden">
+            <div class="container mx-auto px-4">
+                <div class="max-w-6xl mx-auto grid lg:grid-cols-2 items-center gap-x-12 gap-y-8">
+                    <div class="lg:order-2 text-center lg:text-left">
+                        <h2 class="section-title text-center lg:text-left">Die <span class="font-black">Green</span><span class="text-emerald-500 font-black">Suspension</span> App</h2>
+                        <p class="text-lg text-neutral-300 mb-8 max-w-lg mx-auto lg:mx-0">Volle Transparenz und Kontrolle. Unsere begleitende App gibt Ihnen detaillierte Einblicke in die Leistung Ihres Systems.</p>
+                        <ul class="space-y-4 inline-block text-left">
+                            <li class="flex items-start"><i data-lucide="bar-chart-3" class="w-6 h-6 text-emerald-400 mr-3 mt-1 flex-shrink-0"></i><span><strong class="text-white">Live-Daten:</strong> Verfolgen Sie in Echtzeit, wie viel Energie erzeugt wird.</span></li>
+                            <li class="flex items-start"><i data-lucide="file-text" class="w-6 h-6 text-emerald-400 mr-3 mt-1 flex-shrink-0"></i><span><strong class="text-white">Fahrberichte:</strong> Erhalten Sie nach jeder Fahrt eine Zusammenfassung Ihrer Energieerzeugung und CO₂-Einsparung.</span></li>
+                            <li class="flex items-start"><i data-lucide="alert-triangle" class="w-6 h-6 text-emerald-400 mr-3 mt-1 flex-shrink-0"></i><span><strong class="text-white">Systemdiagnose:</strong> Die App informiert Sie über den Systemstatus und zeigt eventuelle Fehlermeldungen an.</span></li>
+                            <li class="flex items-start"><i data-lucide="link" class="w-6 h-6 text-emerald-400 mr-3 mt-1 flex-shrink-0"></i><span><strong class="text-white">OEM-Integration:</strong> Für Kooperationspartner bieten wir die nahtlose Integration unserer Software in bestehende Fahrzeug-Apps.</span></li>
+                        </ul>
+                    </div>
+                    <div class="lg:order-1 flex justify-center items-center gap-8">
+                        <img src="Img/Appscreen.png" alt="App-Ansicht" class="rounded-2xl shadow-2xl transform-gpu rotate-[-5deg] hover:rotate-[-2deg] transition-transform duration-500 w-3/5">
+                        <a href="https://www.apple.com" target="_blank" rel="noopener noreferrer" class="text-center group">
+                            <img src="https://placehold.co/150x150/ffffff/0a0a0a?text=QR" alt="QR Code für App Download" class="rounded-lg mb-4 transition-transform duration-300 group-hover:scale-110">
+                            <p class="text-sm text-neutral-400 group-hover:text-emerald-400 transition-colors">App jetzt herunterladen</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vorteil" class="py-20 md:py-32 bg-neutral-900/50 fade-in-section">
+            <div class="container mx-auto px-4">
+                <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Unser <span class="accent-gradient-text font-black">Vorteil im Wettbewerb</span></h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Während andere noch forschen, liefern wir eine markenunabhängige und flexible Lösung.</p>
+                </div>
+                <div class="max-w-5xl mx-auto p-8 md:p-12 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl transition-all duration-300 h-full">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-4">
+                            <p class="text-neutral-300">Der Markt für regenerative Stoßdämpfer ist jung. Projekte von Herstellern wie Audi (eROT) wurden eingestellt, während andere (z.B. BMW) an patentierten, markengebundenen Systemen arbeiten.</p>
+                            <p class="text-white font-bold">Unser entscheidender Vorteil ist die Flexibilität: GreenSuspension ist als markenunabhängiges System konzipiert, das sowohl in Neuwagen integriert als auch in bestehenden Flotten und Privatfahrzeugen einfach nachgerüstet werden kann.</p>
+                        </div>
+                        <div id="competition-image-container" class="rounded-lg p-4 cursor-zoom-in">
+                            <img id="competition-image" src="img/1.jpg" alt="Diagramm, das GreenSuspension im Wettbewerbsvergleich positioniert" class="w-full h-auto object-contain">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="wirtschaftlichkeit" class="py-20 md:py-32 bg-neutral-900/50 fade-in-section">
+            <div class="container mx-auto px-4">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Ihr <span class="accent-gradient-text font-black">Einsparpotenzial</span></h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Berechnen Sie hier Ihre individuelle Ersparnis - für Ihre Flotte oder Ihren privaten PKW.</p>
+                </div>
+                <div class="max-w-4xl mx-auto p-8 md:p-12 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl transition-all duration-300 h-full">
+                    <div class="flex justify-center border-b border-neutral-700 mb-8">
+                        <button id="tab-flotte" class="px-6 py-3 font-semibold text-white border-b-2 border-emerald-500">Für Flotten</button>
+                        <button id="tab-privat" class="px-6 py-3 font-semibold text-neutral-400 border-b-2 border-transparent">Für Privatkunden</button>
+                    </div>
+                    <div id="rechner-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="partner" class="py-20 md:py-32 fade-in-section">
+            <div class="container mx-auto px-4">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Starke <span class="accent-gradient-text font-black">Partner</span> für eine starke Vision</h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Wir arbeiten mit führenden Institutionen aus Forschung und Industrie zusammen, um die Mobilität von morgen zu gestalten.</p>
+                </div>
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex flex-wrap justify-center items-center gap-8">
+                        <a href="https://www.fraunhofer.de/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/fraunhofer.de" onerror="this.onerror=null;this.src='https://placehold.co/150x40/ffffff/cccccc?text=Fraunhofer';" alt="Fraunhofer Logo" class="max-h-10 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="Fraunhofer"></a>
+                        <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/kit.edu" onerror="this.onerror=null;this.src='https://placehold.co/100x50/ffffff/cccccc?text=KIT';" alt="KIT Logo" class="max-h-12 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="Karlsruher Institut für Technologie"></a>
+                        <a href="https://www.rwth-aachen.de/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/rwth-aachen.de" onerror="this.onerror=null;this.src='https://placehold.co/100x50/ffffff/cccccc?text=RWTH';" alt="RWTH Aachen Logo" class="max-h-12 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="RWTH Aachen"></a>
+                        <a href="https://www.edag.com/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/edag.com" onerror="this.onerror=null;this.src='https://placehold.co/100x40/ffffff/cccccc?text=EDAG';" alt="EDAG Logo" class="max-h-8 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="EDAG"></a>
+                        <a href="https://www.fev.com/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/fev.com" onerror="this.onerror=null;this.src='https://placehold.co/100x40/ffffff/cccccc?text=FEV';" alt="FEV Logo" class="max-h-10 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="FEV"></a>
+                        <a href="https://www.htgf.de/" target="_blank" rel="noopener noreferrer" class="h-20 w-40 flex items-center justify-center p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 transition-colors"><img src="https://logo.clearbit.com/htgf.de" onerror="this.onerror=null;this.src='https://placehold.co/150x40/ffffff/cccccc?text=HTGF';" alt="HTGF Logo" class="max-h-10 w-auto filter grayscale hover:grayscale-0 transition-all duration-200" title="High-Tech Gründerfonds"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="zukunft" class="py-20 md:py-32 bg-neutral-900/50 fade-in-section">
+            <div class="container mx-auto px-4 text-center max-w-4xl">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Die <span class="font-black">Green</span><span class="text-emerald-500 font-black">Suspension</span> Zukunft mitgestalten</h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">
+                        GreenSuspension ist mehr als ein Bauteil. Es ist ein Baustein für die Mobilität der Zukunft. Unsere Vision geht über die Straße hinaus.
+                    </p>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-8 text-left">
+                     <div class="card-interactive p-8 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl transition-all duration-300 h-full">
+                         <i data-lucide="cpu" class="w-10 h-10 text-emerald-400 mb-4 pulsing-icon"></i>
+                         <h3 class="text-2xl font-bold mb-2">KI-gestützte Optimierung</h3>
+                         <p class="text-neutral-400">Zukünftige Generationen unseres Systems werden lernfähig sein. Durch KI-Algorithmen passt sich die Dämpfung dynamisch an Fahrstil, Beladung und Straßenverhältnisse an, um die Energierückgewinnung zu maximieren.</p>
+                     </div>
+                      <div class="card-interactive p-8 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl transition-all duration-300 h-full">
+                         <i data-lucide="globe" class="w-10 h-10 text-emerald-400 mb-4 pulsing-icon" style="animation-delay: 0.2s;"></i>
+                         <h3 class="text-2xl font-bold mb-2">Internationalisierung & neue Märkte</h3>
+                         <p class="text-neutral-400">Wir planen die Expansion in wachsende Märkte wie Nordamerika und Asien. Zudem prüfen wir die Anwendung unserer Technologie in Schienenfahrzeugen, Industrieanwendungen und sogar in erdbebensicheren Gebäudestrukturen.</p>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+        <section id="kontakt" class="py-20 md:py-32 fade-in-section">
+            <div class="container mx-auto px-4">
+                 <div class="mb-16 md:mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">Bereit für den <span class="accent-gradient-text font-black">nächsten Schritt?</span></h2>
+                    <p class="text-lg text-neutral-400 text-center max-w-3xl mx-auto">Kontaktieren Sie uns für eine persönliche Beratung, ein individuelles Flotten-Angebot oder eine Anfrage für Ihr PKW-Set.</p>
+                </div>
+                 <div class="max-w-xl mx-auto p-8 bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-xl transition-all duration-300 h-full">
+                     <form id="contact-form" class="space-y-4">
+                         <div>
+                             <label for="name" class="block mb-2 font-semibold text-sm">Ihr Name</label>
+                             <input type="text" id="name" placeholder="Max Mustermann" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                         </div>
+                         <div>
+                             <label for="email" class="block mb-2 font-semibold text-sm">Ihre E-Mail</label>
+                             <input type="email" id="email" placeholder="max.mustermann@firma.de" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                         </div>
+                         <div>
+                             <label for="message" class="block mb-2 font-semibold text-sm">Ihre Nachricht</label>
+                             <textarea id="message" rows="5" placeholder="Ich interessiere mich für..." class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors"></textarea>
+                         </div>
+                         <button type="submit" class="btn btn-primary w-full !mt-6">Nachricht senden</button>
+                     </form>
+                 </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black py-12">
+        <div class="container mx-auto px-4 text-center text-neutral-500">
+            <p class="text-lg font-bold text-neutral-200 mb-2">Green<span class="text-emerald-500">Suspension</span></p>
+            <div class="flex justify-center flex-wrap gap-x-6 gap-y-2 my-4">
+                 <a href="#technologie" class="hover:text-emerald-400 transition">Technologie</a>
+                <a href="#vorteil" class="hover:text-emerald-400 transition">Unser Vorteil</a>
+                <a href="#kaufen" class="hover:text-emerald-400 transition">Produkte</a>
+                <a href="#wirtschaftlichkeit" class="hover:text-emerald-400 transition">Rechner</a>
+                <a href="#zukunft" class="hover:text-emerald-400 transition">Zukunft</a>
+            </div>
+            <div class="flex justify-center space-x-6 my-6">
+                <a href="#" class="hover:text-white transition-colors"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+            </div>
+            <p>&copy; 2025 GreenSuspension GmbH. Alle Rechte vorbehalten.</p>
+            <div class="mt-4 text-sm">
+                <a href="impressum.html" target="_blank" class="hover:underline">Impressum</a>
+                <span class="mx-2">|</span>
+                <a href="datenschutz.html" target="_blank" class="hover:underline">Datenschutz</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for image zoom -->
+    <div id="image-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 cursor-zoom-out opacity-0">
+        <button id="modal-close" class="absolute top-6 right-6 text-white hover:text-emerald-400 text-5xl font-bold transition-transform hover:scale-110">&times;</button>
+        <img id="modal-image" src="" alt="Vergrößerte Ansicht des Wettbewerbsdiagramms" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl scale-95 transition-transform duration-300">
+    </div>
+
+    <!-- Cookie Banner -->
+    <div id="cookie-banner" class="hidden fixed bottom-0 left-0 right-0 z-[100] bg-neutral-900/80 backdrop-blur-sm p-4 border-t border-neutral-700">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-neutral-300 text-center md:text-left">
+                Diese Webseite verwendet Cookies zur Verbesserung der Nutzererfahrung. Da es sich um ein Schulprojekt handelt, werden keine persönlichen Daten gesammelt oder für kommerzielle Zwecke genutzt. Mit der Nutzung der Seite stimmen Sie der Verwendung technisch notwendiger Cookies zu.
+            </p>
+            <button id="cookie-accept-btn" class="btn btn-primary flex-shrink-0 !py-2 !px-4">Verstanden</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        document.querySelectorAll('#mobile-menu a, .container a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                 mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-black/80');
+            } else {
+                header.classList.remove('bg-black/80');
+            }
+        });
+
+        // ROI Rechner Logic
+        const tabFlotte = document.getElementById('tab-flotte');
+        const tabPrivat = document.getElementById('tab-privat');
+        const rechnerContent = document.getElementById('rechner-content');
+
+        const flotteHTML = `
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div>
+                    <h3 class="text-3xl font-bold mb-6">Für Ihre Flotte</h3>
+                    <form id="roi-rechner-flotte" class="space-y-4">
+                        <div>
+                            <label for="fahrzeug-typ-flotte" class="block mb-2 font-semibold text-sm">Fahrzeugtyp</label>
+                            <select id="fahrzeug-typ-flotte" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                                <option value="lkw">LKW (40t)</option>
+                                <option value="bus">Stadtbus</option>
+                                <option value="lieferwagen">Lieferwagen (3.5t)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="flottengroesse" class="block mb-2 font-semibold text-sm">Anzahl Fahrzeuge</label>
+                            <input type="number" id="flottengroesse" value="10" min="1" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label for="kilometer-flotte" class="block mb-2 font-semibold text-sm">Ø Jährliche Kilometer pro Fahrzeug</label>
+                            <input type="number" id="kilometer-flotte" value="120000" min="1" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label for="preis-flotte" class="block mb-2 font-semibold text-sm">Kraftstoff-/Strompreis (€/l oder €/kWh)</label>
+                            <input type="number" step="0.01" id="preis-flotte" value="1.75" min="0" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-neutral-800/80 rounded-lg p-8 flex flex-col justify-center text-center">
+                    <h4 class="text-lg font-semibold text-neutral-400 mb-2">Ihr geschätztes Ergebnis:</h4>
+                    <div class="mb-6">
+                        <p class="text-4xl lg:text-5xl font-bold text-emerald-400" id="ersparnis-output-flotte"></p>
+                        <p class="text-neutral-400">Jährliche Ersparnis</p>
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-4xl lg:text-5xl font-bold text-emerald-400" id="co2-output-flotte"></p>
+                        <p class="text-neutral-400">CO2-Reduktion pro Jahr</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl lg:text-5xl font-bold text-emerald-400" id="amortisation-output-flotte"></p>
+                        <p class="text-neutral-400">Amortisationszeit</p>
+                    </div>
+                </div>
+            </div>`;
+        
+        const privatHTML = `
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div>
+                     <h3 class="text-3xl font-bold mb-6">Für Ihren PKW</h3>
+                    <form id="roi-rechner-privat" class="space-y-4">
+                         <div class="hidden">
+                            <select id="fahrzeug-typ-privat"><option value="pkw" selected></option></select>
+                         </div>
+                        <div>
+                            <label for="kilometer-privat" class="block mb-2 font-semibold text-sm">Ihre jährliche Fahrleistung (in km)</label>
+                            <input type="number" id="kilometer-privat" value="15000" min="1" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label for="preis-privat" class="block mb-2 font-semibold text-sm">Ihr Strompreis (€/kWh)</label>
+                            <input type="number" step="0.01" id="preis-privat" value="0.40" min="0" class="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors">
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-neutral-800/80 rounded-lg p-8 flex flex-col justify-center text-center">
+                    <h4 class="text-lg font-semibold text-neutral-400 mb-2">Ihr geschätztes Ergebnis:</h4>
+                     <div class="mb-6">
+                        <p class="text-4xl lg:text-5xl font-bold text-emerald-400" id="ersparnis-output-privat"></p>
+                        <p class="text-neutral-400">Jährliche Ersparnis</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl lg:text-5xl font-bold text-emerald-400" id="amortisation-output-privat"></p>
+                        <p class="text-neutral-400">Amortisationszeit</p>
+                    </div>
+                </div>
+            </div>`;
+
+        function animateValue(obj, start, end, duration, options = {}) {
+            if (obj.animation) {
+                cancelAnimationFrame(obj.animation);
+            }
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = progress * (end - start) + start;
+
+                if(options.isCurrency) {
+                     obj.innerHTML = `€&nbsp;${Math.floor(current).toLocaleString('de-DE')}`;
+                } else {
+                     obj.innerHTML = `${current.toFixed(1).replace('.', ',')}&nbsp;${options.suffix || ''}`;
+                }
+
+                if (progress < 1) {
+                    obj.animation = requestAnimationFrame(step);
+                }
+            };
+            obj.animation = requestAnimationFrame(step);
+        }
+
+        function calculateROI() {
+            const mode = document.querySelector('#roi-rechner-flotte') ? 'flotte' : 'privat';
+            
+            let fahrzeugTyp, flottengroesse, kilometer, preis;
+            let ersparnisOutput, co2Output, amortisationOutput;
+            let startErsparnis=0, startCo2=0, startAmortisation=0;
+
+            if (mode === 'flotte') {
+                fahrzeugTyp = document.getElementById('fahrzeug-typ-flotte').value;
+                flottengroesse = parseFloat(document.getElementById('flottengroesse').value) || 0;
+                kilometer = parseFloat(document.getElementById('kilometer-flotte').value) || 0;
+                preis = parseFloat(document.getElementById('preis-flotte').value) || 0;
+                ersparnisOutput = document.getElementById('ersparnis-output-flotte');
+                co2Output = document.getElementById('co2-output-flotte');
+                amortisationOutput = document.getElementById('amortisation-output-flotte');
+
+                startErsparnis = parseFloat(ersparnisOutput.innerText.replace(/[^0-9,-]+/g,"").replace(',','.')) || 0;
+                startCo2 = parseFloat(co2Output.innerText.replace(/[^0-9,-]+/g,"").replace(',','.')) || 0;
+                startAmortisation = parseFloat(amortisationOutput.innerText.replace(/[^0-9,-]+/g,"").replace(',','.')) || 0;
+
+            } else { // privat
+                fahrzeugTyp = 'pkw';
+                flottengroesse = 1;
+                kilometer = parseFloat(document.getElementById('kilometer-privat').value) || 0;
+                preis = parseFloat(document.getElementById('preis-privat').value) || 0;
+                ersparnisOutput = document.getElementById('ersparnis-output-privat');
+                amortisationOutput = document.getElementById('amortisation-output-privat');
+                startErsparnis = parseFloat(ersparnisOutput.innerText.replace(/[^0-9,-]+/g,"").replace(',','.')) || 0;
+                startAmortisation = parseFloat(amortisationOutput.innerText.replace(/[^0-9,-]+/g,"").replace(',','.')) || 0;
+            }
+
+            let verbrauchPro100km, ersparnisProzent, co2ProEinheit, investitionProFahrzeug;
+            
+            switch(fahrzeugTyp) {
+                case 'lkw':
+                    verbrauchPro100km = 30; ersparnisProzent = 0.05; co2ProEinheit = 2.65; investitionProFahrzeug = 2000;
+                    break;
+                case 'bus':
+                    verbrauchPro100km = 40; ersparnisProzent = 0.08; co2ProEinheit = 2.65; investitionProFahrzeug = 2000;
+                    break;
+                case 'lieferwagen':
+                    verbrauchPro100km = 12; ersparnisProzent = 0.10; co2ProEinheit = 0.4; investitionProFahrzeug = 2000;
+                    break;
+                case 'pkw':
+                    verbrauchPro100km = 20; ersparnisProzent = 0.15; co2ProEinheit = 0.4; investitionProFahrzeug = 1600;
+                    break;
+            }
+
+            const jaehrlicherVerbrauchProFahrzeug = (kilometer / 100) * verbrauchPro100km;
+            const ersparnisProFahrzeug = jaehrlicherVerbrauchProFahrzeug * ersparnisProzent;
+            
+            const ersparnisEuroTotal = ersparnisProFahrzeug * preis * flottengroesse;
+            const co2ReduktionTotal = (ersparnisProFahrzeug * co2ProEinheit * flottengroesse) / 1000;
+            
+            const gesamtinvestition = investitionProFahrzeug * flottengroesse;
+            const amortisationszeit = gesamtinvestition > 0 && ersparnisEuroTotal > 0 ? gesamtinvestition / ersparnisEuroTotal : 0;
+
+            animateValue(ersparnisOutput, startErsparnis, ersparnisEuroTotal, 1000, { isCurrency: true });
+            animateValue(amortisationOutput, startAmortisation, amortisationszeit, 1000, { suffix: 'Jahre' });
+            if(co2Output) {
+                 animateValue(co2Output, startCo2, co2ReduktionTotal, 1000, { suffix: 't' });
+            }
+        }
+
+        function setupListeners() {
+            const form = document.querySelector('#roi-rechner-flotte, #roi-rechner-privat');
+            if(form) {
+                form.addEventListener('input', calculateROI);
+                calculateROI();
+            }
+        }
+        
+        function switchTab(tab) {
+            if(tab === 'flotte'){
+                rechnerContent.innerHTML = flotteHTML;
+                tabFlotte.classList.add('border-emerald-500', 'text-white');
+                tabFlotte.classList.remove('border-transparent', 'text-neutral-400');
+                tabPrivat.classList.remove('border-emerald-500', 'text-white');
+                tabPrivat.classList.add('border-transparent', 'text-neutral-400');
+            } else {
+                rechnerContent.innerHTML = privatHTML;
+                tabPrivat.classList.add('border-emerald-500', 'text-white');
+                tabPrivat.classList.remove('border-transparent', 'text-neutral-400');
+                tabFlotte.classList.remove('border-emerald-500', 'text-white');
+                tabFlotte.classList.add('border-transparent', 'text-neutral-400');
+            }
+            setupListeners();
+        }
+
+        tabFlotte.addEventListener('click', () => switchTab('flotte'));
+        tabPrivat.addEventListener('click', () => switchTab('privat'));
+
+        // Initial Load
+        switchTab('flotte');
+
+        // Fade-in effect on scroll
+        const faders = document.querySelectorAll('.fade-in-section, .card-highlight');
+        const appearOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-visible');
+                appearOnScroll.unobserve(entry.target);
+            });
+        }, appearOptions);
+        faders.forEach(fader => appearOnScroll.observe(fader));
+        
+        // 3D Tilt Effect for Cards
+        const cards = document.querySelectorAll('.card-interactive');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const { width, height } = rect;
+                const rotateX = (y / height - 0.5) * -10;
+                const rotateY = (x / width - 0.5) * 10;
+                card.style.setProperty('--rotate-x', `${rotateX}deg`);
+                card.style.setProperty('--rotate-y', `${rotateY}deg`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rotate-x', '0deg');
+                card.style.setProperty('--rotate-y', '0deg');
+            });
+        });
+
+        // Contact Form Submission
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'Gesendet!';
+                submitButton.disabled = true;
+
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => {
+                         contactForm.reset();
+                         submitButton.textContent = originalButtonText;
+                         submitButton.disabled = false;
+                    }, 1500);
+                }, 500);
+            });
+        }
+        
+        // Image Modal Logic
+        const competitionImageContainer = document.getElementById('competition-image-container');
+        const imageModal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalClose = document.getElementById('modal-close');
+
+        if (competitionImageContainer && imageModal && modalImage && modalClose) {
+            const competitionImage = competitionImageContainer.querySelector('img');
+
+            const openModal = () => {
+                modalImage.src = competitionImage.src;
+                imageModal.classList.remove('hidden');
+                imageModal.classList.add('flex');
+                setTimeout(() => {
+                    imageModal.classList.remove('opacity-0');
+                    modalImage.classList.remove('scale-95');
+                }, 10);
+            };
+
+            const closeModal = () => {
+                imageModal.classList.add('opacity-0');
+                modalImage.classList.add('scale-95');
+                setTimeout(() => {
+                    imageModal.classList.add('hidden');
+                    imageModal.classList.remove('flex');
+                    modalImage.src = '';
+                }, 300);
+            };
+
+            competitionImageContainer.addEventListener('click', openModal);
+            modalClose.addEventListener('click', closeModal);
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    closeModal();
+                }
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
+        
+        // Cookie Banner Logic
+        const cookieBanner = document.getElementById('cookie-banner');
+        const cookieAcceptBtn = document.getElementById('cookie-accept-btn');
+
+        if (!localStorage.getItem('cookiesAccepted')) {
+            cookieBanner.classList.remove('hidden');
+        }
+
+        cookieAcceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesAccepted', 'true');
+            cookieBanner.style.display = 'none';
+        });
+
+    </script>
+
+</body>
+</html>
